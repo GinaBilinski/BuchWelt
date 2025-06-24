@@ -1,16 +1,13 @@
 name: Run Tests
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   vitest:
     name: Run Unit & Integration Tests (Vitest)
     runs-on: ubuntu-latest
-
     env:
       VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
       VITE_AUTH_DOMAIN: ${{ secrets.VITE_AUTH_DOMAIN }}
@@ -18,26 +15,21 @@ jobs:
       VITE_STORAGE_BUCKET: ${{ secrets.VITE_STORAGE_BUCKET }}
       VITE_MESSAGING_SENDER_ID: ${{ secrets.VITE_MESSAGING_SENDER_ID }}
       VITE_APP_ID: ${{ secrets.VITE_APP_ID }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
       - name: Install dependencies
         run: npm install
-
       - name: Run Vitest
         run: npx vitest run
 
   playwright:
     name: Run E2E Tests (Playwright)
     runs-on: ubuntu-latest
-
     env:
       VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
       VITE_AUTH_DOMAIN: ${{ secrets.VITE_AUTH_DOMAIN }}
@@ -45,22 +37,17 @@ jobs:
       VITE_STORAGE_BUCKET: ${{ secrets.VITE_STORAGE_BUCKET }}
       VITE_MESSAGING_SENDER_ID: ${{ secrets.VITE_MESSAGING_SENDER_ID }}
       VITE_APP_ID: ${{ secrets.VITE_APP_ID }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
       - name: Install dependencies
         run: npm install
-
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
       - name: Start dev server & run Playwright tests
         run: |
           npm run dev &
