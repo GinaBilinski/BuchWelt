@@ -1,13 +1,31 @@
 name: Run Tests
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
 jobs:
+  eslint:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npx eslint .
+
   vitest:
     name: Run Unit & Integration Tests (Vitest)
     runs-on: ubuntu-latest
+    needs: eslint
     env:
       VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
       VITE_AUTH_DOMAIN: ${{ secrets.VITE_AUTH_DOMAIN }}
@@ -30,6 +48,7 @@ jobs:
   playwright:
     name: Run E2E Tests (Playwright)
     runs-on: ubuntu-latest
+    needs: vitest
     env:
       VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
       VITE_AUTH_DOMAIN: ${{ secrets.VITE_AUTH_DOMAIN }}
